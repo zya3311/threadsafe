@@ -1,7 +1,0 @@
-com\monitor\agent\MonitorAgent.class
-com\monitor\agent\MonitorTransformer.class
-com\monitor\agent\AccessMonitor.class
-com\monitor\agent\Test.class
-com\model\Model.class
-com\monitor\agent\AccessMonitor$ThreadType.class
-com\monitor\agent\MonitorTransformer$1.class
