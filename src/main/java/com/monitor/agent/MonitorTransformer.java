@@ -14,16 +14,8 @@ public class MonitorTransformer implements ClassFileTransformer {
 
         System.out.println("Transforming class: " + className);
 
-        // 扩展排除规则
-        if (className == null ||
-                className.startsWith("java/") ||
-                className.startsWith("sun/") ||
-                className.startsWith("jdk/") ||
-                className.startsWith("com/sun/") ||
-                className.startsWith("com/monitor/") ||
-                className.contains("ClassLoader") ||
-                className.contains("javassist") ||
-                className.contains("asm")) {
+        // 只处理com/model包下的类
+        if (className == null || !className.startsWith("com/model")) {
             return null;
         }
 
@@ -34,7 +26,7 @@ public class MonitorTransformer implements ClassFileTransformer {
                 cp.insertClassPath(new LoaderClassPath(loader));
             }
 
-            // 检查类是否已经被加载
+            // 获取类
             CtClass cc = null;
             try {
                 cc = cp.get(className.replace('/', '.'));
@@ -56,6 +48,8 @@ public class MonitorTransformer implements ClassFileTransformer {
             boolean modified = false;
             // 处理类中的所有字段
             for (CtField field : cc.getDeclaredFields()) {
+                System.out.println("Processing field: " + field.getName());
+                
                 // 排除final字段
                 if (Modifier.isFinal(field.getModifiers())) {
                     continue;
@@ -67,7 +61,8 @@ public class MonitorTransformer implements ClassFileTransformer {
 
             if (modified) {
                 System.out.println("Successfully transformed class: " + className);
-                System.out.println("Generated methods for fields: " + cc.getDeclaredFields().length);
+                // 将转换后的字节码写入文件以供验证
+                cc.writeFile("output");  // 确保output目录存在
             }
 
             return modified ? cc.toBytecode() : null;
@@ -79,24 +74,39 @@ public class MonitorTransformer implements ClassFileTransformer {
         return null;
     }
 
-    private void instrumentField(CtClass cc, CtField field) throws CannotCompileException, NotFoundException {
+    private void instrumentField(CtClass cc, CtField field) throws CannotCompileException {
         String fieldName = field.getName();
+        System.out.println("Instrumenting field: " + fieldName);
+        
+        // 构造监控代码
+        String accessCode = String.format(
+            "{ " +
+            "System.out.println(\"Accessing field: %s.%s\"); " +
+            "com.monitor.agent.AccessMonitor.checkAccess(\"%s\", \"%s\", Thread.currentThread()); " +
+            "}",
+            cc.getName(), fieldName, cc.getName(), fieldName
+        );
 
-        // 添加字段访问监控代码
-        String accessCode = String.format("com.monitor.agent.AccessMonitor.checkAccess(\"%s\", \"%s\", Thread.currentThread());",
-                cc.getName(), fieldName);
-
-        field.setModifiers(field.getModifiers() & ~Modifier.PRIVATE);  // 移除private修饰符
+        // 使用类级别的instrument
         cc.instrument(new ExprEditor() {
             public void edit(FieldAccess f) throws CannotCompileException {
                 if (f.getFieldName().equals(fieldName)) {
-                    f.replace(String.format("{ %s $_ = $proceed($$); }", accessCode));
+                    System.out.println("Found field access: " + fieldName);
+                    if (f.isReader()) {
+                        System.out.println("Modifying read access");
+                        f.replace(String.format(
+                            "%s $_ = $proceed($$);",
+                            accessCode
+                        ));
+                    } else if (f.isWriter()) {
+                        System.out.println("Modifying write access");
+                        f.replace(String.format(
+                            "%s $proceed($$);",
+                            accessCode
+                        ));
+                    }
                 }
             }
         });
-    }
-
-    private String capitalize(String str) {
-        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
 } 

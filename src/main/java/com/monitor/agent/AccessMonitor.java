@@ -13,7 +13,7 @@ public class AccessMonitor {
     }
 
     public static void checkAccess(String className, String fieldName, Thread thread) {
-        System.out.println("Checking access for " + className + "." + fieldName + " by thread " + thread.getName());
+        System.out.println("Checking access: " + className + "." + fieldName + " by " + thread.getName());
         String key = className + "." + fieldName;
         ThreadType currentThreadType = isRSMThread(thread) ? ThreadType.RSM : ThreadType.NON_RSM;
 
