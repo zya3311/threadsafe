@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Premain-Class: com.monitor.agent.MonitorAgent
+Premain-Class: com.threadsafe.agent.MonitorAgent
 Can-Redefine-Classes: true
 Can-Retransform-Classes: true

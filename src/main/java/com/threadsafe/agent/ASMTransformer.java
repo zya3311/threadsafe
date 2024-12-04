@@ -1,4 +1,4 @@
-package com.monitor.agent;
+package com.threadsafe.agent;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -8,24 +8,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class ASMTransformer {
-    public byte[] transform(byte[] classfileBuffer) {
+    public byte[] transform(byte[] classFileBuffer) {
         try {
             System.out.println("Starting ASM transformation");  // 添加日志
-            ClassReader cr = new ClassReader(classfileBuffer);
-            ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
-            FieldAccessVisitor visitor = new FieldAccessVisitor(cw);
-            cr.accept(visitor, 0);
+            ClassReader classReader = new ClassReader(classFileBuffer);
+            ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);
+            FieldAccessVisitor visitor = new FieldAccessVisitor(classWriter);
+            classReader.accept(visitor, 0);
 
             // 将生成的字节码写入文件
-            byte[] bytecode = cw.toByteArray();
-            writeBytecodeToFile(bytecode, "out/" + cr.getClassName() + ".class");
+            byte[] bytecode = classWriter.toByteArray();
+            writeBytecodeToFile(bytecode, "out/" + classReader.getClassName() + ".class");
 
             System.out.println("ASM transformation completed");  // 添加日志
             return bytecode;
         } catch (Exception e) {
             System.err.println("Error during ASM transformation: " + e.getMessage());
             e.printStackTrace();
-            return classfileBuffer;
+            return classFileBuffer;
         }
     }
 

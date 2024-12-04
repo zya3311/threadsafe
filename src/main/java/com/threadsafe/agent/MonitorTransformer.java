@@ -1,4 +1,4 @@
-package com.monitor.agent;
+package com.threadsafe.agent;
 
 import javassist.*;
 import javassist.expr.*;
@@ -15,7 +15,7 @@ public class MonitorTransformer implements ClassFileTransformer {
         System.out.println("Transforming class: " + className);
 
         // 只处理com/model包下的类
-        if (className == null || !className.startsWith("com/model")) {
+        if (className == null || !className.startsWith("com/threadsafe/model")) {
             return null;
         }
 
