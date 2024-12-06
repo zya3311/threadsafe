@@ -1,7 +1,5 @@
 package com.threadsafe;
 
-import com.model.Model;
-
 public class Test {
     public static void main(String[] args) {
         try {
@@ -14,6 +12,7 @@ public class Test {
             Thread coreThread = new Thread(() -> {
                 model1.value = 100;
                 Model.name = "zzz";
+                int a = Model.staticValue;
                 model1.setV(1);
             }, "CONTRACT_WORKER");
 
@@ -23,7 +22,8 @@ public class Test {
             // 然后用非CORE线程访问，应该抛出异常
             Thread nonCoreThread = new Thread(() -> {
                 model2.value = 200;
-//                Model.name = "yyy";
+                int a = Model.staticValue;
+                Model.name = "yyy";
                 int v = model1.getV();
             }, "Worker-Thread-1");
 

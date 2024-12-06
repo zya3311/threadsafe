@@ -12,69 +12,56 @@ import org.apache.logging.log4j.Logger;
 
 public class MonitorAgent {
     private static final Logger logger = LogManager.getLogger(MonitorAgent.class);
-    private static Set<String> targetPackages = new HashSet<>();
+    private static String targetPackage ="com/threadsafe";
+    private static final Set<String> excludedPrefixes = new HashSet<>(Arrays.asList(
+        "com/threadsafe/agent",  // 已有的排除
+        "com/example/excluded"   // 新增的排除
+    ));
 
     public static void premain(String agentArgs, Instrumentation inst) {
         logger.info("Thread Monitor Agent is starting...");
         logger.info("Current classpath: {}", System.getProperty("java.class.path"));
-        
         if (agentArgs != null && !agentArgs.trim().isEmpty()) {
-            String[] packages = agentArgs.split(",");
-            targetPackages.addAll(Arrays.asList(packages));
-            logger.info("Monitoring packages: {}", targetPackages);
-        } else {
-            targetPackages.add("com/model");
-            logger.info("No packages specified, monitoring default package: com/model");
+            targetPackage = agentArgs.split(",") [0].replace(".", "/");
+            logger.info("Monitoring packages: {}", targetPackage);
         }
 
         inst.addTransformer(new ClassFileTransformer() {
             @Override
             public byte[] transform(ClassLoader loader, String className,
-                                  Class<?> classBeingRedefined,
-                                  ProtectionDomain protectionDomain,
-                                  byte[] classfileBuffer) {
+                                    Class<?> classBeingRedefined,
+                                    ProtectionDomain protectionDomain,
+                                    byte[] classfiledBuffer) {
                 try {
-                    logger.info("Transform called for class: {} with classloader: {}", className, loader);
-                    if (className != null && (className.equals("com/model/Model") ||
-                        className.equals("com/threadsafe/Test"))) {
-                        logger.debug("Transforming class: {}", className);
+//                    logger.info("Transform called for class: {} with classloader: {}", className, loader);
+                    if (className != null && className.startsWith(targetPackage) && !excludedPrefixes.stream().anyMatch(prefix -> className.startsWith(prefix))) {
+//                        logger.debug("Transforming class: {}", className);
                         ASMTransformer asmTransformer = new ASMTransformer();
-                        return asmTransformer.transform(classfileBuffer);
+                        return asmTransformer.transform(classfiledBuffer);
                     }
                 } catch (Throwable t) {
                     logger.error("Error transforming class: " + className, t);
                 }
-                return classfileBuffer;
+                return classfiledBuffer;
             }
         }, true);
-        
-        try {
-            Class<?>[] loadedClasses = inst.getAllLoadedClasses();
-            for (Class<?> clazz : loadedClasses) {
-                String className = clazz.getName().replace('.', '/');
-                if (className.equals("com/model/Model") || 
-                    className.equals("com/threadsafe/Test")) {
-                    if (inst.isModifiableClass(clazz) && inst.isRetransformClassesSupported()) {
-                        logger.info("Retransforming loaded class: {}", clazz.getName());
-                        inst.retransformClasses(clazz);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Error retransforming classes", e);
-        }
-        
-        logger.info("Thread Monitor Agent started successfully");
-    }
 
-    private static boolean shouldTransform(String className) {
-        if (className.startsWith("com/threadsafe/agent")) {
-            logger.debug("Skipping agent's own class: {}", className);
-            return false;
-        }
-        
-        return targetPackages.stream().anyMatch(pkg -> 
-            className.startsWith(pkg.replace('.', '/'))
-        );
+//        try {
+//            Class<?>[] loadedClasses = inst.getAllLoadedClasses();
+//            for (Class<?> clazz : loadedClasses) {
+//                String className = clazz.getName().replace('.', '/');
+//                if (className.equals("com/threadsafe/Model") ||
+//                        className.equals("com/threadsafe/Test")) {
+//                    if (inst.isModifiableClass(clazz) && inst.isRetransformClassesSupported()) {
+//                        logger.info("Retransforming loaded class: {}", clazz.getName());
+//                        inst.retransformClasses(clazz);
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            logger.error("Error retransforming classes", e);
+//        }
+
+        logger.info("Thread Monitor Agent started successfully");
     }
 } 

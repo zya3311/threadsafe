@@ -8,24 +8,22 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class ASMTransformer {
-    public byte[] transform(byte[] classFileBuffer) {
+    public byte[] transform(byte[] classfileBuffer) {
         try {
-            System.out.println("Starting ASM transformation");  // 添加日志
-            ClassReader classReader = new ClassReader(classFileBuffer);
-            ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);
-            FieldAccessVisitor visitor = new FieldAccessVisitor(classWriter);
-            classReader.accept(visitor, 0);
-
-            // 将生成的字节码写入文件
-            byte[] bytecode = classWriter.toByteArray();
-            writeBytecodeToFile(bytecode, "out/" + classReader.getClassName() + ".class");
-
-            System.out.println("ASM transformation completed");  // 添加日志
-            return bytecode;
+            System.out.println("Starting ASM transformation");
+            ClassReader cr = new ClassReader(classfileBuffer);
+            
+            System.out.println("Class access flags: " + cr.getAccess());
+            System.out.println("Class version: " + cr.readByte(6) + "." + cr.readByte(7));
+            
+            ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
+            FieldAccessVisitor fv = new FieldAccessVisitor(cw);
+            cr.accept(fv, ClassReader.EXPAND_FRAMES);
+            System.out.println("ASM transformation completed");
+            return cw.toByteArray();
         } catch (Exception e) {
-            System.err.println("Error during ASM transformation: " + e.getMessage());
             e.printStackTrace();
-            return classFileBuffer;
+            return classfileBuffer;
         }
     }
 
