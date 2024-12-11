@@ -1,0 +1,535 @@
+{
+  "violations": [
+    {
+      "variable": "static.com/citics/eqd/common/core/Global.currentPosition",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "onFragment",
+          "class": "CoreWorker",
+          "children": [
+            {
+              "method": "FragmentAssembler.onFragment",
+              "class": "FragmentAssembler",
+              "children": [
+                {
+                  "method": "read",
+                  "class": "TermReader",
+                  "children": [
+                    {
+                      "method": "poll",
+                      "class": "Image",
+                      "children": [
+                        {
+                          "method": "poll",
+                          "class": "Subscription",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "Global",
+          "children": [
+            {
+              "method": "main",
+              "class": "EqdTradeApplication",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/common/spring/SpringContext.context",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "getBean",
+          "class": "SpringContext",
+          "children": [
+            {
+              "method": "dispatch",
+              "class": "DispatchService",
+              "children": [
+                {
+                  "method": "onFragment",
+                  "class": "CoreWorker",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "setApplicationContext",
+          "class": "SpringContext",
+          "children": [
+            {
+              "method": "invokeAwareInterfaces",
+              "class": "ApplicationContextAwareProcessor",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/common/core/Global.warmup",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "canUpdate",
+          "class": "Global",
+          "children": [
+            {
+              "method": "beginReal",
+              "class": "TX",
+              "children": [
+                {
+                  "method": "handleData",
+                  "class": "AbstractAdminService",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "Global",
+          "children": [
+            {
+              "method": "main",
+              "class": "EqdTradeApplication",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/common/core/Global.saveToDb",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "canUpdate",
+          "class": "Global",
+          "children": [
+            {
+              "method": "beginReal",
+              "class": "TX",
+              "children": [
+                {
+                  "method": "handleData",
+                  "class": "AbstractAdminService",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "Global",
+          "children": [
+            {
+              "method": "main",
+              "class": "EqdTradeApplication",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/rsm/service/admin/SystemParamsAdminService.seqIdHasSetFlag",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "postHandle",
+          "class": "SystemParamsAdminService",
+          "children": [
+            {
+              "method": "handleData",
+              "class": "AbstractAdminService",
+              "children": [
+                {
+                  "method": "dispatch",
+                  "class": "DispatchService",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "SystemParamsAdminService",
+          "children": [
+            {
+              "method": "newInstance",
+              "class": "Constructor",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/init/SystemInit.DATA_LOAD_COUNT_DOWN_LATCH",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "handleList",
+          "class": "FinishLoadService",
+          "children": [
+            {
+              "method": "handleData",
+              "class": "AbstractDataLoadService",
+              "children": [
+                {
+                  "method": "dispatch",
+                  "class": "DispatchService",
+                  "children": [
+                    {
+                      "method": "onFragment",
+                      "class": "CoreWorker",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "SystemInit",
+          "children": [
+            {
+              "method": "newInstance",
+              "class": "Constructor",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/init/SystemInit.WARM_UP_CLEAR_COUNT_DOWN_LATCH",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "postHandle",
+          "class": "WarmUpClearAdminService",
+          "children": [
+            {
+              "method": "handleData",
+              "class": "AbstractAdminService",
+              "children": [
+                {
+                  "method": "dispatch",
+                  "class": "DispatchService",
+                  "children": [
+                    {
+                      "method": "onFragment",
+                      "class": "CoreWorker",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "onApplicationEvent",
+          "class": "SystemInit",
+          "children": [
+            {
+              "method": "main",
+              "class": "EqdTradeApplication",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/disruptor/DisruptorContext.instance",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "getInstance",
+          "class": "DisruptorContext",
+          "children": [
+            {
+              "method": "<clinit>",
+              "class": "ProducerContext",
+              "children": [
+                {
+                  "method": "parseAndHandle",
+                  "class": "TradeHandlerImpl",
+                  "children": [
+                    {
+                      "method": "dispatch",
+                      "class": "DispatchService",
+                      "children": [
+                        {
+                          "method": "onFragment",
+                          "class": "CoreWorker",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "DisruptorContext",
+          "children": [
+            {
+              "method": "startDisruptor",
+              "class": "SystemInit",
+              "children": [
+                {
+                  "method": "startDisruptorAndIpcServer",
+                  "class": "SystemInit",
+                  "children": [
+                    {
+                      "method": "onApplicationEvent",
+                      "class": "SystemInit",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/statemachine/fluent/cola/impl/Debugger.isDebugOn",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "debug",
+          "class": "Debugger",
+          "children": [
+            {
+              "method": "transit",
+              "class": "TransitionImpl",
+              "children": [
+                {
+                  "method": "fireEvent",
+                  "class": "StateMachineImpl",
+                  "children": [
+                    {
+                      "method": "handle",
+                      "class": "OrderResponseHandler",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "Debugger",
+          "children": [
+            {
+              "method": "addTransition",
+              "class": "StateImpl",
+              "children": [
+                {
+                  "method": "on",
+                  "class": "TransitionBuilderImpl",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/common/core/Global.hedge",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "canSend",
+          "class": "Global",
+          "children": [
+            {
+              "method": "send",
+              "class": "AeronSenderMaster",
+              "children": [
+                {
+                  "method": "sendMessageToHedge",
+                  "class": "AbstractHandler",
+                  "children": [
+                    {
+                      "method": "genAndSendHedgeMsg",
+                      "class": "AbstractOrderHandler",
+                      "children": [
+                        {
+                          "method": "sendHedgeMessage",
+                          "class": "AbstractOrderHandler",
+                          "children": [
+                            {
+                              "method": "handle",
+                              "class": "AbstractOrderHandler",
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "Global",
+          "children": [
+            {
+              "method": "main",
+              "class": "EqdTradeApplication",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/common/core/Global.alreadySentPosition",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "sendPositionCommandToArchive",
+          "class": "AeronSenderMaster",
+          "children": [
+            {
+              "method": "sendTradeCommand",
+              "class": "AeronSenderMaster",
+              "children": [
+                {
+                  "method": "send",
+                  "class": "AeronSenderMaster",
+                  "children": [
+                    {
+                      "method": "sendMessageToHedge",
+                      "class": "AbstractHandler",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "Global",
+          "children": [
+            {
+              "method": "main",
+              "class": "EqdTradeApplication",
+              "children": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "variable": "static.com/citics/eqd/rsm/service/admin/MonitorResultAdminService.localMonitorResultMap",
+      "core_thread": "CONTRACT_WORKER",
+      "non_core_thread": "main",
+      "call_stacks": {
+        "core": {
+          "method": "postHandle",
+          "class": "MonitorTriggerAdminService",
+          "children": [
+            {
+              "method": "handleData",
+              "class": "AbstractAdminService",
+              "children": [
+                {
+                  "method": "dispatch",
+                  "class": "DispatchService",
+                  "children": [
+                    {
+                      "method": "onFragment",
+                      "class": "CoreWorker",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "non_core": {
+          "method": "<clinit>",
+          "class": "MonitorResultAdminService",
+          "children": [
+            {
+              "method": "newInstance",
+              "class": "Constructor",
+              "children": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total_violations": 11,
+    "affected_classes": [
+      "Global",
+      "SpringContext",
+      "SystemInit",
+      "DisruptorContext",
+      "Debugger",
+      "MonitorResultAdminService"
+    ],
+    "most_frequent_violations": {
+      "Global.warmup": 3,
+      "Global.currentPosition": 2,
+      "SpringContext.context": 2,
+      "SystemInit.WARM_UP_PREPARE_COUNT_DOWN_LATCH": 1,
+      "Global.saveToDb": 1,
+      "Global.hedge": 1,
+      "Global.ARCHIVE_SAVED_SENT_POSITION": 1,
+      "MonitorResultAdminService.localMonitorResultMap": 1
+    }
+  }
+} 

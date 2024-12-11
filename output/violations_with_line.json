@@ -1,0 +1,1582 @@
+[
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.currentPosition",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 38
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "<clinit>",
+          "file": "Global.java",
+          "line": 16
+        },
+        {
+          "class": "com.citics.EqdTradeApplication",
+          "method": "main",
+          "file": "EqdTradeApplication.java",
+          "line": 30
+        },
+        {
+          "class": "org.springframework.boot.loader.MainMethodRunner",
+          "method": "run",
+          "file": "MainMethodRunner.java",
+          "line": 49
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 107
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 58
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/spring/SpringContext.context",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.common.spring.SpringContext",
+          "method": "getBean",
+          "file": "SpringContext.java",
+          "line": 30
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 67
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.common.spring.SpringContext",
+          "method": "setApplicationContext",
+          "file": "SpringContext.java",
+          "line": 18
+        },
+        {
+          "class": "org.springframework.context.support.ApplicationContextAwareProcessor",
+          "method": "invokeAwareInterfaces",
+          "file": "ApplicationContextAwareProcessor.java",
+          "line": 123
+        },
+        {
+          "class": "org.springframework.context.support.ApplicationContextAwareProcessor",
+          "method": "postProcessBeforeInitialization",
+          "file": "ApplicationContextAwareProcessor.java",
+          "line": 100
+        },
+        {
+          "class": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+          "method": "applyBeanPostProcessorsBeforeInitialization",
+          "file": "AbstractAutowireCapableBeanFactory.java",
+          "line": 415
+        },
+        {
+          "class": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+          "method": "initializeBean",
+          "file": "AbstractAutowireCapableBeanFactory.java",
+          "line": 1786
+        },
+        {
+          "class": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+          "method": "doCreateBean",
+          "file": "AbstractAutowireCapableBeanFactory.java",
+          "line": 594
+        },
+        {
+          "class": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+          "method": "createBean",
+          "file": "AbstractAutowireCapableBeanFactory.java",
+          "line": 516
+        },
+        {
+          "class": "org.springframework.beans.factory.support.DefaultSingletonBeanRegistry",
+          "method": "getSingleton",
+          "file": "DefaultSingletonBeanRegistry.java",
+          "line": 234
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.warmup",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "canUpdate",
+          "file": "Global.java",
+          "line": 99
+        },
+        {
+          "class": "com.citics.eqd.common.core.TX",
+          "method": "beginReal",
+          "file": "TX.java",
+          "line": 56
+        },
+        {
+          "class": "com.citics.eqd.rsm.AbstractAdminService",
+          "method": "handleData",
+          "file": "AbstractAdminService.java",
+          "line": 135
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 68
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "<clinit>",
+          "file": "Global.java",
+          "line": 21
+        },
+        {
+          "class": "com.citics.EqdTradeApplication",
+          "method": "main",
+          "file": "EqdTradeApplication.java",
+          "line": 30
+        },
+        {
+          "class": "org.springframework.boot.loader.MainMethodRunner",
+          "method": "run",
+          "file": "MainMethodRunner.java",
+          "line": 49
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 107
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 58
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.saveToDb",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "canUpdate",
+          "file": "Global.java",
+          "line": 99
+        },
+        {
+          "class": "com.citics.eqd.common.core.TX",
+          "method": "beginReal",
+          "file": "TX.java",
+          "line": 56
+        },
+        {
+          "class": "com.citics.eqd.rsm.AbstractAdminService",
+          "method": "handleData",
+          "file": "AbstractAdminService.java",
+          "line": 135
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 68
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "<clinit>",
+          "file": "Global.java",
+          "line": 61
+        },
+        {
+          "class": "com.citics.EqdTradeApplication",
+          "method": "main",
+          "file": "EqdTradeApplication.java",
+          "line": 30
+        },
+        {
+          "class": "org.springframework.boot.loader.MainMethodRunner",
+          "method": "run",
+          "file": "MainMethodRunner.java",
+          "line": 49
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 107
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 58
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/rsm/service/admin/SystemParamsAdminService.seqIdHasSetFlag",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.SystemParamsAdminService",
+          "method": "postHandle",
+          "file": "SystemParamsAdminService.java",
+          "line": 93
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.SystemParamsAdminService",
+          "method": "postHandle",
+          "file": "SystemParamsAdminService.java",
+          "line": 24
+        },
+        {
+          "class": "com.citics.eqd.rsm.AbstractAdminService",
+          "method": "handleData",
+          "file": "AbstractAdminService.java",
+          "line": 138
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 68
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.SystemParamsAdminService",
+          "method": "<clinit>",
+          "file": "SystemParamsAdminService.java",
+          "line": 45
+        },
+        {
+          "class": "org.springframework.beans.BeanUtils",
+          "method": "instantiateClass",
+          "file": "BeanUtils.java",
+          "line": 204
+        },
+        {
+          "class": "org.springframework.beans.factory.support.SimpleInstantiationStrategy",
+          "method": "instantiate",
+          "file": "SimpleInstantiationStrategy.java",
+          "line": 87
+        },
+        {
+          "class": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+          "method": "instantiateBean",
+          "file": "AbstractAutowireCapableBeanFactory.java",
+          "line": 1310
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/init/SystemInit.DATA_LOAD_COUNT_DOWN_LATCH",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.dataservice.FinishLoadService",
+          "method": "handleList",
+          "file": "FinishLoadService.java",
+          "line": 43
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.dataservice.AbstractDataLoadService",
+          "method": "handleData",
+          "file": "AbstractDataLoadService.java",
+          "line": 81
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 62
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "<clinit>",
+          "file": "SystemInit.java",
+          "line": 57
+        },
+        {
+          "class": "org.springframework.beans.BeanUtils",
+          "method": "instantiateClass",
+          "file": "BeanUtils.java",
+          "line": 204
+        },
+        {
+          "class": "org.springframework.beans.factory.support.SimpleInstantiationStrategy",
+          "method": "instantiate",
+          "file": "SimpleInstantiationStrategy.java",
+          "line": 87
+        },
+        {
+          "class": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+          "method": "instantiateBean",
+          "file": "AbstractAutowireCapableBeanFactory.java",
+          "line": 1310
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/init/SystemInit.WARM_UP_PREPARE_COUNT_DOWN_LATCH",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.WarmUpPrepareAdminService",
+          "method": "postHandle",
+          "file": "WarmUpPrepareAdminService.java",
+          "line": 92
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.WarmUpPrepareAdminService",
+          "method": "postHandle",
+          "file": "WarmUpPrepareAdminService.java",
+          "line": 26
+        },
+        {
+          "class": "com.citics.eqd.rsm.AbstractAdminService",
+          "method": "handleData",
+          "file": "AbstractAdminService.java",
+          "line": 138
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 68
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "onApplicationEvent",
+          "file": "SystemInit.java",
+          "line": 146
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "onApplicationEvent",
+          "file": "SystemInit.java",
+          "line": 52
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "doInvokeListener",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 172
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "invokeListener",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 165
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "multicastEvent",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 139
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "publishEvent",
+          "file": "AbstractApplicationContext.java",
+          "line": 404
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "publishEvent",
+          "file": "AbstractApplicationContext.java",
+          "line": 361
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "start",
+          "file": "AbstractApplicationContext.java",
+          "line": 1365
+        },
+        {
+          "class": "com.citics.EqdTradeApplication",
+          "method": "main",
+          "file": "EqdTradeApplication.java",
+          "line": 42
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/disruptor/DisruptorContext.instance",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.disruptor.DisruptorContext",
+          "method": "getInstance",
+          "file": "DisruptorContext.java",
+          "line": 30
+        },
+        {
+          "class": "com.citics.eqd.disruptor.ProducerContext",
+          "method": "<clinit>",
+          "file": "ProducerContext.java",
+          "line": 7
+        },
+        {
+          "class": "com.citics.eqd.rsm.core.TradeHandlerImpl",
+          "method": "parseAndHandle",
+          "file": "TradeHandlerImpl.java",
+          "line": 191
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 52
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.disruptor.DisruptorContext",
+          "method": "<clinit>",
+          "file": "DisruptorContext.java",
+          "line": 26
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "startDisruptor",
+          "file": "SystemInit.java",
+          "line": 194
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "startDisruptorAndIpcServer",
+          "file": "SystemInit.java",
+          "line": 170
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "onApplicationEvent",
+          "file": "SystemInit.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "onApplicationEvent",
+          "file": "SystemInit.java",
+          "line": 52
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "doInvokeListener",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 172
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "invokeListener",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 165
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "multicastEvent",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 139
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "publishEvent",
+          "file": "AbstractApplicationContext.java",
+          "line": 404
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.hedge",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "canSend",
+          "file": "Global.java",
+          "line": 87
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.AeronSenderMaster",
+          "method": "send",
+          "file": "AeronSenderMaster.java",
+          "line": 105
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.AeronSenderMaster",
+          "method": "send",
+          "file": "AeronSenderMaster.java",
+          "line": 39
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractHandler",
+          "method": "sendMessageToHedge",
+          "file": "AbstractHandler.java",
+          "line": 756
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "genAndSendHedgeMsg",
+          "file": "AbstractOrderHandler.java",
+          "line": 75
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "sendHedgeMessage",
+          "file": "AbstractOrderHandler.java",
+          "line": 300
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "handle",
+          "file": "AbstractOrderHandler.java",
+          "line": 239
+        },
+        {
+          "class": "com.citics.eqd.rsm.mq.service.SetOrderService",
+          "method": "execute",
+          "file": "SetOrderService.java",
+          "line": 24
+        },
+        {
+          "class": "com.citics.eqd.rsm.mq.service.SetOrderService",
+          "method": "execute",
+          "file": "SetOrderService.java",
+          "line": 13
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "<clinit>",
+          "file": "Global.java",
+          "line": 62
+        },
+        {
+          "class": "com.citics.EqdTradeApplication",
+          "method": "main",
+          "file": "EqdTradeApplication.java",
+          "line": 30
+        },
+        {
+          "class": "org.springframework.boot.loader.MainMethodRunner",
+          "method": "run",
+          "file": "MainMethodRunner.java",
+          "line": 49
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 107
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 58
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.ARCHIVE_SAVED_SENT_POSITION",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "canSend",
+          "file": "Global.java",
+          "line": 87
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.AeronSenderMaster",
+          "method": "send",
+          "file": "AeronSenderMaster.java",
+          "line": 105
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.AeronSenderMaster",
+          "method": "send",
+          "file": "AeronSenderMaster.java",
+          "line": 39
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractHandler",
+          "method": "sendMessageToHedge",
+          "file": "AbstractHandler.java",
+          "line": 756
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "genAndSendHedgeMsg",
+          "file": "AbstractOrderHandler.java",
+          "line": 75
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "sendHedgeMessage",
+          "file": "AbstractOrderHandler.java",
+          "line": 300
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "handle",
+          "file": "AbstractOrderHandler.java",
+          "line": 239
+        },
+        {
+          "class": "com.citics.eqd.rsm.mq.service.SetOrderService",
+          "method": "execute",
+          "file": "SetOrderService.java",
+          "line": 24
+        },
+        {
+          "class": "com.citics.eqd.rsm.mq.service.SetOrderService",
+          "method": "execute",
+          "file": "SetOrderService.java",
+          "line": 13
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "onApplicationEvent",
+          "file": "SystemInit.java",
+          "line": 103
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "onApplicationEvent",
+          "file": "SystemInit.java",
+          "line": 52
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "doInvokeListener",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 172
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "invokeListener",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 165
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "multicastEvent",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 139
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "publishEvent",
+          "file": "AbstractApplicationContext.java",
+          "line": 404
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "publishEvent",
+          "file": "AbstractApplicationContext.java",
+          "line": 361
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "start",
+          "file": "AbstractApplicationContext.java",
+          "line": 1365
+        },
+        {
+          "class": "com.citics.EqdTradeApplication",
+          "method": "main",
+          "file": "EqdTradeApplication.java",
+          "line": 42
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.alreadySentPosition",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.AeronSenderMaster",
+          "method": "sendPositionCommandToArchive",
+          "file": "AeronSenderMaster.java",
+          "line": 383
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.AeronSenderMaster",
+          "method": "sendTradeCommand",
+          "file": "AeronSenderMaster.java",
+          "line": 190
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.AeronSenderMaster",
+          "method": "send",
+          "file": "AeronSenderMaster.java",
+          "line": 107
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.AeronSenderMaster",
+          "method": "send",
+          "file": "AeronSenderMaster.java",
+          "line": 39
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractHandler",
+          "method": "sendMessageToHedge",
+          "file": "AbstractHandler.java",
+          "line": 756
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "genAndSendHedgeMsg",
+          "file": "AbstractOrderHandler.java",
+          "line": 75
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "sendHedgeMessage",
+          "file": "AbstractOrderHandler.java",
+          "line": 300
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.AbstractOrderHandler",
+          "method": "handle",
+          "file": "AbstractOrderHandler.java",
+          "line": 239
+        },
+        {
+          "class": "com.citics.eqd.rsm.mq.service.SetOrderService",
+          "method": "execute",
+          "file": "SetOrderService.java",
+          "line": 24
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.common.core.Global",
+          "method": "<clinit>",
+          "file": "Global.java",
+          "line": 26
+        },
+        {
+          "class": "com.citics.EqdTradeApplication",
+          "method": "main",
+          "file": "EqdTradeApplication.java",
+          "line": 30
+        },
+        {
+          "class": "org.springframework.boot.loader.MainMethodRunner",
+          "method": "run",
+          "file": "MainMethodRunner.java",
+          "line": 49
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 107
+        },
+        {
+          "class": "org.springframework.boot.loader.Launcher",
+          "method": "launch",
+          "file": "Launcher.java",
+          "line": 58
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/statemachine/fluent/cola/impl/Debugger.isDebugOn",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.statemachine.fluent.cola.impl.Debugger",
+          "method": "debug",
+          "file": "Debugger.java",
+          "line": 14
+        },
+        {
+          "class": "com.citics.eqd.statemachine.fluent.cola.impl.TransitionImpl",
+          "method": "transit",
+          "file": "TransitionImpl.java",
+          "line": 90
+        },
+        {
+          "class": "com.citics.eqd.statemachine.fluent.cola.impl.StateMachineImpl",
+          "method": "fireEvent",
+          "file": "StateMachineImpl.java",
+          "line": 59
+        },
+        {
+          "class": "com.citics.eqd.rsm.handler.OrderResponseHandler",
+          "method": "handle",
+          "file": "OrderResponseHandler.java",
+          "line": 63
+        },
+        {
+          "class": "com.citics.eqd.rsm.mq.service.OrderResponseService",
+          "method": "execute",
+          "file": "OrderResponseService.java",
+          "line": 23
+        },
+        {
+          "class": "com.citics.eqd.rsm.mq.service.OrderResponseService",
+          "method": "execute",
+          "file": "OrderResponseService.java",
+          "line": 13
+        },
+        {
+          "class": "com.citics.eqd.rsm.core.TradeHandlerImpl",
+          "method": "parseAndHandle",
+          "file": "TradeHandlerImpl.java",
+          "line": 199
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 52
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.statemachine.fluent.cola.impl.Debugger",
+          "method": "<clinit>",
+          "file": "Debugger.java",
+          "line": 11
+        },
+        {
+          "class": "com.citics.eqd.statemachine.fluent.cola.impl.StateImpl",
+          "method": "addTransition",
+          "file": "StateImpl.java",
+          "line": 32
+        },
+        {
+          "class": "com.citics.eqd.statemachine.fluent.cola.builder.TransitionBuilderImpl",
+          "method": "on",
+          "file": "TransitionBuilderImpl.java",
+          "line": 50
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.dataservice.EqdStateMachineLoadService",
+          "method": "handleList",
+          "file": "EqdStateMachineLoadService.java",
+          "line": 91
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.dataservice.EqdStateMachineLoadService",
+          "method": "loadDataFromFile",
+          "file": "EqdStateMachineLoadService.java",
+          "line": 68
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/init/SystemInit.WARM_UP_CLEAR_COUNT_DOWN_LATCH",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.WarmUpClearAdminService",
+          "method": "postHandle",
+          "file": "WarmUpClearAdminService.java",
+          "line": 125
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.WarmUpClearAdminService",
+          "method": "postHandle",
+          "file": "WarmUpClearAdminService.java",
+          "line": 27
+        },
+        {
+          "class": "com.citics.eqd.rsm.AbstractAdminService",
+          "method": "handleData",
+          "file": "AbstractAdminService.java",
+          "line": 138
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 68
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "onApplicationEvent",
+          "file": "SystemInit.java",
+          "line": 152
+        },
+        {
+          "class": "com.citics.eqd.init.SystemInit",
+          "method": "onApplicationEvent",
+          "file": "SystemInit.java",
+          "line": 52
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "doInvokeListener",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 172
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "invokeListener",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 165
+        },
+        {
+          "class": "org.springframework.context.event.SimpleApplicationEventMulticaster",
+          "method": "multicastEvent",
+          "file": "SimpleApplicationEventMulticaster.java",
+          "line": 139
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "publishEvent",
+          "file": "AbstractApplicationContext.java",
+          "line": 404
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "publishEvent",
+          "file": "AbstractApplicationContext.java",
+          "line": 361
+        },
+        {
+          "class": "org.springframework.context.support.AbstractApplicationContext",
+          "method": "start",
+          "file": "AbstractApplicationContext.java",
+          "line": 1365
+        },
+        {
+          "class": "com.citics.EqdTradeApplication",
+          "method": "main",
+          "file": "EqdTradeApplication.java",
+          "line": 42
+        }
+      ]
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/rsm/service/admin/MonitorResultAdminService.localMonitorResultMap",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 102
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService",
+          "method": "postHandle",
+          "file": "MonitorTriggerAdminService.java",
+          "line": 57
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService",
+          "method": "postHandle",
+          "file": "MonitorTriggerAdminService.java",
+          "line": 20
+        },
+        {
+          "class": "com.citics.eqd.rsm.AbstractAdminService",
+          "method": "handleData",
+          "file": "AbstractAdminService.java",
+          "line": 138
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.DispatchService",
+          "method": "dispatch",
+          "file": "DispatchService.java",
+          "line": 68
+        },
+        {
+          "class": "com.citics.eqd.mq.aeron.CoreWorker",
+          "method": "onFragment",
+          "file": "CoreWorker.java",
+          "line": 52
+        },
+        {
+          "class": "io.aeron.FragmentAssembler",
+          "method": "onFragment",
+          "file": "FragmentAssembler.java",
+          "line": 120
+        },
+        {
+          "class": "io.aeron.logbuffer.TermReader",
+          "method": "read",
+          "file": "TermReader.java",
+          "line": 76
+        },
+        {
+          "class": "io.aeron.Image",
+          "method": "poll",
+          "file": "Image.java",
+          "line": 308
+        },
+        {
+          "class": "io.aeron.Subscription",
+          "method": "poll",
+          "file": "Subscription.java",
+          "line": 195
+        }
+      ]
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "stack": [
+        {
+          "class": "com.threadsafe.agent.AccessMonitor",
+          "method": "checkAccess",
+          "file": "AccessMonitor.java",
+          "line": 110
+        },
+        {
+          "class": "com.citics.eqd.rsm.service.admin.MonitorResultAdminService",
+          "method": "<clinit>",
+          "file": "MonitorResultAdminService.java",
+          "line": 32
+        },
+        {
+          "class": "org.springframework.beans.BeanUtils",
+          "method": "instantiateClass",
+          "file": "BeanUtils.java",
+          "line": 204
+        },
+        {
+          "class": "org.springframework.beans.factory.support.SimpleInstantiationStrategy",
+          "method": "instantiate",
+          "file": "SimpleInstantiationStrategy.java",
+          "line": 87
+        },
+        {
+          "class": "org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory",
+          "method": "instantiateBean",
+          "file": "AbstractAutowireCapableBeanFactory.java",
+          "line": 1310
+        }
+      ]
+    }
+  }
+]

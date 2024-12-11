@@ -55,12 +55,29 @@ public class FieldAccessVisitor extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        if (isExcluded) {
-            return super.visitMethod(access, name, descriptor, signature, exceptions);
-        }
         MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
         System.out.println("Visiting method: " + name);
-        return new FieldAccessMethodVisitor(mv, className, name, fieldAccess);
+        // 创建一个包装的MethodVisitor来检查方法的注解
+        return new MethodVisitor(Opcodes.ASM9, 
+               new FieldAccessMethodVisitor(mv, className, name, fieldAccess, isExcluded)) {
+            private boolean isMethodExcluded = false;
+
+            @Override
+            public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+                if (descriptor.equals("Lcom/threadsafe/agent/annotation/RsmThreadSafe;")) {
+                    isMethodExcluded = true;
+                    logger.info("Method {} in class {} is excluded from thread safety check due to @RsmThreadSafe", 
+                        name, className);
+                }
+                return super.visitAnnotation(descriptor, visible);
+            }
+
+            @Override
+            public void visitCode() {
+                ((FieldAccessMethodVisitor)mv).setMethodExcluded(isMethodExcluded);
+                super.visitCode();
+            }
+        };
     }
 }
 
@@ -69,12 +86,21 @@ class FieldAccessMethodVisitor extends MethodVisitor {
     private final String className;
     private final String methodName;
     private final Map<String, Integer> fieldAccess;
+    private final boolean isClassExcluded;
+    private boolean isMethodExcluded;
 
-    public FieldAccessMethodVisitor(MethodVisitor mv, String className, String methodName, Map<String, Integer> fieldAccess) {
+    public FieldAccessMethodVisitor(MethodVisitor mv, String className, String methodName, 
+                                  Map<String, Integer> fieldAccess, boolean isClassExcluded) {
         super(Opcodes.ASM9, mv);
         this.className = className;
         this.methodName = methodName;
         this.fieldAccess = fieldAccess;
+        this.isClassExcluded = isClassExcluded;
+        this.isMethodExcluded = false;
+    }
+
+    public void setMethodExcluded(boolean excluded) {
+        this.isMethodExcluded = excluded;
     }
 
     @Override
@@ -82,7 +108,8 @@ class FieldAccessMethodVisitor extends MethodVisitor {
         if (opcode == Opcodes.GETFIELD || opcode == Opcodes.PUTFIELD || 
             opcode == Opcodes.GETSTATIC || opcode == Opcodes.PUTSTATIC) {
             
-            if (methodName.equals("<init>")) {
+            // 如果类或方法被标记为@RsmThreadSafe，跳过检查
+            if (isClassExcluded || isMethodExcluded) {
                 super.visitFieldInsn(opcode, owner, name, descriptor);
                 return;
             }
@@ -104,7 +131,7 @@ class FieldAccessMethodVisitor extends MethodVisitor {
                 mv.visitInsn(Opcodes.ACONST_NULL);
             }
             
-            mv.visitLdcInsn(className);
+            mv.visitLdcInsn(owner);
             mv.visitLdcInsn(name);
             mv.visitInsn((opcode == Opcodes.GETSTATIC || opcode == Opcodes.PUTSTATIC) ? Opcodes.ICONST_1 : Opcodes.ICONST_0);
             mv.visitInsn(isRead ? Opcodes.ICONST_1 : Opcodes.ICONST_0);

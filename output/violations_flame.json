@@ -1,0 +1,480 @@
+{
+  "name": "Thread Violations",
+  "value": 12,
+  "children": [
+    {
+      "name": "static.com/citics/eqd/common/core/Global.currentPosition",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "FragmentAssembler.FragmentAssembler.onFragment",
+              "value": 1,
+              "children": [
+                {
+                  "name": "TermReader.read",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "Image.poll",
+                      "value": 1,
+                      "children": [
+                        {
+                          "name": "Subscription.poll",
+                          "value": 1
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "EqdTradeApplication.main",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/common/spring/SpringContext.context",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "DispatchService.dispatch",
+              "value": 1,
+              "children": [
+                {
+                  "name": "CoreWorker.onFragment",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "ApplicationContextAwareProcessor.invokeAwareInterfaces",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/common/core/Global.warmup",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "TX.beginReal",
+              "value": 1,
+              "children": [
+                {
+                  "name": "AbstractAdminService.handleData",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "EqdTradeApplication.main",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/common/core/Global.saveToDb",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "TX.beginReal",
+              "value": 1,
+              "children": [
+                {
+                  "name": "AbstractAdminService.handleData",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "EqdTradeApplication.main",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/rsm/service/admin/SystemParamsAdminService.seqIdHasSetFlag",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "AbstractAdminService.handleData",
+              "value": 1,
+              "children": [
+                {
+                  "name": "DispatchService.dispatch",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "Constructor.newInstance",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/init/SystemInit.DATA_LOAD_COUNT_DOWN_LATCH",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "AbstractDataLoadService.handleData",
+              "value": 1,
+              "children": [
+                {
+                  "name": "DispatchService.dispatch",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "CoreWorker.onFragment",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "Constructor.newInstance",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/init/SystemInit.WARM_UP_CLEAR_COUNT_DOWN_LATCH",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "AbstractAdminService.handleData",
+              "value": 1,
+              "children": [
+                {
+                  "name": "DispatchService.dispatch",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "CoreWorker.onFragment",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "EqdTradeApplication.main",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/disruptor/DisruptorContext.instance",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "ProducerContext.<clinit>",
+              "value": 1,
+              "children": [
+                {
+                  "name": "TradeHandlerImpl.parseAndHandle",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "DispatchService.dispatch",
+                      "value": 1,
+                      "children": [
+                        {
+                          "name": "CoreWorker.onFragment",
+                          "value": 1
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "SystemInit.startDisruptor",
+              "value": 1,
+              "children": [
+                {
+                  "name": "SystemInit.startDisruptorAndIpcServer",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "SystemInit.onApplicationEvent",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/statemachine/fluent/cola/impl/Debugger.isDebugOn",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "TransitionImpl.transit",
+              "value": 1,
+              "children": [
+                {
+                  "name": "StateMachineImpl.fireEvent",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "OrderResponseHandler.handle",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "StateImpl.addTransition",
+              "value": 1,
+              "children": [
+                {
+                  "name": "TransitionBuilderImpl.on",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/common/core/Global.hedge",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "AeronSenderMaster.send",
+              "value": 1,
+              "children": [
+                {
+                  "name": "AbstractHandler.sendMessageToHedge",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "AbstractOrderHandler.genAndSendHedgeMsg",
+                      "value": 1,
+                      "children": [
+                        {
+                          "name": "AbstractOrderHandler.sendHedgeMessage",
+                          "value": 1,
+                          "children": [
+                            {
+                              "name": "AbstractOrderHandler.handle",
+                              "value": 1
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "EqdTradeApplication.main",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/common/core/Global.alreadySentPosition",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "AeronSenderMaster.sendTradeCommand",
+              "value": 1,
+              "children": [
+                {
+                  "name": "AeronSenderMaster.send",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "AbstractHandler.sendMessageToHedge",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "EqdTradeApplication.main",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "static.com/citics/eqd/rsm/service/admin/MonitorResultAdminService.localMonitorResultMap",
+      "value": 1,
+      "children": [
+        {
+          "name": "Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "AbstractAdminService.handleData",
+              "value": 1,
+              "children": [
+                {
+                  "name": "DispatchService.dispatch",
+                  "value": 1,
+                  "children": [
+                    {
+                      "name": "CoreWorker.onFragment",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Non-Core Thread",
+          "value": 1,
+          "children": [
+            {
+              "name": "Constructor.newInstance",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

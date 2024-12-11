@@ -12,14 +12,27 @@
             </Policies>
             <DefaultRolloverStrategy max="30"/>
         </RollingFile>
+        <RollingFile name="AppLogFile" fileName="logs/application.log"
+                     filePattern="logs/application-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
     </Appenders>
     <Loggers>
         <Logger name="com.threadsafe.agent" level="debug" additivity="false">
             <AppenderRef ref="AgentLogFile"/>
             <AppenderRef ref="Console"/>
         </Logger>
+        <Logger name="com.example" level="debug" additivity="false">
+            <AppenderRef ref="AppLogFile"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="AppLogFile"/>
         </Root>
     </Loggers>
 </Configuration> 

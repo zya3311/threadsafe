@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stack Trace Viewer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .node {
+            fill: steelblue;
+            fill-opacity: 0.8;
+            stroke: white;
+        }
+        .node:hover {
+            fill-opacity: 1;
+        }
+        .label {
+            font: 10px sans-serif;
+            fill: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="stack-viewer"></div>
+    <textarea id="json-input" rows="10" cols="80"></textarea>
+    <button onclick="visualize()">Visualize</button>
+    
+    <script>
+    function visualize() {
+        const jsonStr = document.getElementById('json-input').value;
+        const data = JSON.parse(jsonStr);
+        
+        // 设置画布大小
+        const width = 960;
+        const height = 500;
+        const svg = d3.select("#stack-viewer")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+            
+        // 渲染当前堆栈
+        renderStack(data.current, svg, 0, "Current Stack");
+        // 渲染之前的堆栈
+        renderStack(data.previous, svg, width/2, "Previous Stack");
+    }
+    
+    function renderStack(node, svg, xOffset, title) {
+        // ... 渲染逻辑
+    }
+    </script>
+</body>
+</html> 

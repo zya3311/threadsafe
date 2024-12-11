@@ -1,0 +1,134 @@
+[
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.currentPosition",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.mq.aeron.CoreWorker.onFragment:line 38"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.common.core.Global.clinit:line 16"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/spring/SpringContext.context",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.common.spring.SpringContext.getBean:line 30"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.common.spring.SpringContext.setApplicationContext:line 18"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.warmup",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.common.core.Global.canUpdate:line 99"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.common.core.Global.clinit:line 21"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.saveToDb",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.common.core.Global.canUpdate:line 99"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.common.core.Global.clinit:line 61"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/rsm/service/admin/SystemParamsAdminService.seqIdHasSetFlag",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.rsm.service.admin.SystemParamsAdminService.postHandle:line 93"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.rsm.service.admin.SystemParamsAdminService.clinit:line 45"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/init/SystemInit.DATA_LOAD_COUNT_DOWN_LATCH",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.rsm.service.dataservice.FinishLoadService.handleList:line 43"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.init.SystemInit.clinit:line 57"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/init/SystemInit.WARM_UP_CLEAR_COUNT_DOWN_LATCH",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.rsm.service.admin.WarmUpClearAdminService.postHandle:line 125"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.init.SystemInit.onApplicationEvent:line 152"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/disruptor/DisruptorContext.instance",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.disruptor.DisruptorContext.getInstance:line 30"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.disruptor.DisruptorContext.clinit:line 26"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/statemachine/fluent/cola/impl/Debugger.isDebugOn",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.statemachine.fluent.cola.impl.Debugger.debug:line 14"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.statemachine.fluent.cola.impl.Debugger.clinit:line 11"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.hedge",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.common.core.Global.canSend:line 87"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.common.core.Global.clinit:line 62"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/common/core/Global.alreadySentPosition",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.mq.aeron.AeronSenderMaster.sendPositionCommandToArchive:line 383"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.common.core.Global.clinit:line 26"
+    }
+  },
+  {
+    "variable": "static.com/citics/eqd/rsm/service/admin/MonitorResultAdminService.localMonitorResultMap",
+    "core_thread": {
+      "thread_name": "CONTRACT_WORKER",
+      "location": "com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle:line 57"
+    },
+    "non_core_thread": {
+      "thread_name": "main",
+      "location": "com.citics.eqd.rsm.service.admin.MonitorResultAdminService.clinit:line 32"
+    }
+  }
+]

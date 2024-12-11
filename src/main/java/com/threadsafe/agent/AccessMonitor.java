@@ -6,6 +6,9 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.IOException;
 
 public class AccessMonitor {
     private static final Map<String, WriteInfo> nonCoreWriteMap = new ConcurrentHashMap<>();
@@ -28,25 +31,63 @@ public class AccessMonitor {
         }
     }
 
-    public static void checkAccess(Thread thread, Object instance, String className, String fieldName, boolean isStatic, boolean isRead) {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        boolean isInInitializer = false;
-        for (StackTraceElement element : stackTrace) {
-            if (element.getMethodName().equals("<init>") || 
-                element.getMethodName().equals("<clinit>")) {
-                isInInitializer = true;
-                break;
+    private static class StackNode {
+        String method;
+        String clazz;
+        List<StackNode> children = new ArrayList<>();
+        
+        public StackNode(String method, String clazz) {
+            this.method = method;
+            this.clazz = clazz;
+        }
+        
+        public static StackNode fromStackTrace(StackTraceElement[] elements) {
+            StackNode root = new StackNode("root", "");
+            StackNode current = root;
+            for (StackTraceElement element : elements) {
+                String simpleName = element.getClassName();
+                int lastDot = simpleName.lastIndexOf('.');
+                if (lastDot > 0) {
+                    simpleName = simpleName.substring(lastDot + 1);
+                }
+                
+                StackNode node = new StackNode(
+                    element.getMethodName(),
+                    simpleName
+                );
+                current.children.add(node);
+                current = node;
             }
+            return root;
         }
+    }
 
-        if (!isRead && isInInitializer) {
-            return;
+    private static String convertToFlameGraph(StackNode currentStack, StackNode previousStack) {
+        StringBuilder json = new StringBuilder();
+        json.append("{\"current\":");
+        convertNodeToJson(currentStack, json);
+        json.append(",\"previous\":");
+        convertNodeToJson(previousStack, json);
+        json.append("}");
+        return json.toString();
+    }
+
+    private static void convertNodeToJson(StackNode node, StringBuilder json) {
+        json.append("{\"m\":\"").append(node.method)
+            .append("\",\"c\":\"").append(node.clazz)
+            .append("\",\"n\":[");
+        for (int i = 0; i < node.children.size(); i++) {
+            if (i > 0) json.append(",");
+            convertNodeToJson(node.children.get(i), json);
         }
+        json.append("]}");
+    }
 
+    public static void checkAccess(Thread thread, Object instance, String className, String fieldName, boolean isStatic, boolean isRead) {
         String key = isStatic ? 
             "static." + className + "." + fieldName :
-            System.identityHashCode(instance) + "." + className + "." + fieldName;
-        
+            thread.getName() + "." + System.identityHashCode(instance) + "." + className + "." + fieldName;
+
         if (checkedFields.contains(key)) {
             return;
         }

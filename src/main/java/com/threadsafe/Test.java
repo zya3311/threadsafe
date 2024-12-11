@@ -23,7 +23,8 @@ public class Test {
             Thread nonCoreThread = new Thread(() -> {
                 model2.value = 200;
                 int a = Model.staticValue;
-                Model.name = "yyy";
+
+//                Model.name = "yyy";
                 int v = model1.getV();
             }, "Worker-Thread-1");
 
