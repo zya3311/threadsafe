@@ -14,7 +14,7 @@ public class AccessMonitor {
     private static final Map<String, WriteInfo> nonCoreWriteMap = new ConcurrentHashMap<>();
     private static final Set<String> checkedFields = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private static final Logger logger = LogManager.getLogger(AccessMonitor.class);
-    private static final int MAX_STACK_DEPTH = 10;
+    private static final Map<String, Set<String>> ignoreStaticInitFields = new ConcurrentHashMap<>();
 
     public enum ThreadType {
         CORE,
@@ -24,10 +24,12 @@ public class AccessMonitor {
     private static class WriteInfo {
         final String threadName;
         final Exception stackTrace;
+        final boolean isStaticInit;
 
-        WriteInfo(String threadName, Exception stackTrace) {
+        WriteInfo(String threadName, Exception stackTrace, boolean isStaticInit) {
             this.threadName = threadName;
             this.stackTrace = stackTrace;
+            this.isStaticInit = isStaticInit;
         }
     }
 
@@ -84,30 +86,47 @@ public class AccessMonitor {
     }
 
     public static void checkAccess(Thread thread, Object instance, String className, String fieldName, boolean isStatic, boolean isRead) {
-        String key = isStatic ? 
+        // 生成key，如果是静态变量，则key为"static." + className + "." + fieldName，否则为thread.getName() + "." + System.identityHashCode(instance) + "." + className + "." + fieldName
+        String key = isStatic ?
             "static." + className + "." + fieldName :
             thread.getName() + "." + System.identityHashCode(instance) + "." + className + "." + fieldName;
 
+        // 如果已经检查过该变量，则直接返回
         if (checkedFields.contains(key)) {
             return;
         }
 
+        // 判断当前线程类型，如果是核心线程，则类型为CORE，否则为NON_CORE
         ThreadType currentThreadType = isCoreThread(thread) ? ThreadType.CORE : ThreadType.NON_CORE;
 
+        // 如果是读取操作
         if (isRead) {
+            // 获取该变量的写信息
             WriteInfo writeInfo = nonCoreWriteMap.get(key);
+            // 如果当前线程是核心线程，并且该变量被非核心线程写入过
             if (currentThreadType == ThreadType.CORE && writeInfo != null) {
-                logger.fatal("Invalid read: CORE thread '{}' attempting to read variable {} that was written by NON_CORE thread '{}'", 
-                    thread.getName(), key, writeInfo.threadName);
-                logger.fatal("Current thread stack trace: {}", formatStackTrace(new Exception("Stack trace")));
-                logger.fatal("Previous NON_CORE thread write stack trace: {}", formatStackTrace(writeInfo.stackTrace));
-                checkedFields.add(key);
+                // 如果该变量是静态初始化的，并且需要忽略静态初始化，则忽略
+                boolean shouldIgnore = writeInfo.isStaticInit && shouldIgnoreStaticInit(className, fieldName);
+                if (!shouldIgnore) {
+                    // 记录错误日志
+                    logger.fatal("Invalid read: CORE thread '{}' attempting to read variable {} that was written by NON_CORE thread '{}'",
+                        thread.getName(), key, writeInfo.threadName);
+                    logger.fatal("Current thread stack trace: {}", formatStackTrace(new Exception("Stack trace")));
+                    logger.fatal("Previous NON_CORE thread write stack trace: {}", formatStackTrace(writeInfo.stackTrace));
+                    // 将该变量标记为已检查
+                    checkedFields.add(key);
+                }
             }
         } else {
+            // 如果是写入操作，并且当前线程是非核心线程
             if (currentThreadType == ThreadType.NON_CORE) {
+                // 判断是否是静态初始化
+                boolean isStaticInit = isStaticInitialization(Thread.currentThread().getStackTrace());
+                // 将该变量的写信息存入nonCoreWriteMap
                 nonCoreWriteMap.put(key, new WriteInfo(
                     thread.getName(), 
-                    new Exception("NON_CORE thread write stack trace")
+                    new Exception("NON_CORE thread write stack trace"),
+                    isStaticInit
                 ));
             }
         }
@@ -116,16 +135,9 @@ public class AccessMonitor {
     private static String formatStackTrace(Exception e) {
         StringBuilder sb = new StringBuilder("\n");
         StackTraceElement[] stackTrace = e.getStackTrace();
-        int depth = Math.min(stackTrace.length, MAX_STACK_DEPTH);
-        
-        for (int i = 0; i < depth; i++) {
-            sb.append("    at ").append(stackTrace[i]).append("\n");
+        for (StackTraceElement element : stackTrace) {
+            sb.append("    at ").append(element).append("\n");
         }
-        
-        if (stackTrace.length > MAX_STACK_DEPTH) {
-            sb.append("    ... ").append(stackTrace.length - MAX_STACK_DEPTH).append(" more");
-        }
-        
         return sb.toString();
     }
 
@@ -140,5 +152,23 @@ public class AccessMonitor {
 
     public static Map<String, WriteInfo> getAccessMap() {
         return new ConcurrentHashMap<>(nonCoreWriteMap);
+    }
+
+    public static void setIgnoreStaticInitFields(String className, Set<String> fields) {
+        ignoreStaticInitFields.put(className, fields);
+    }
+
+    private static boolean shouldIgnoreStaticInit(String className, String fieldName) {
+        Set<String> fields = ignoreStaticInitFields.get(className);
+        return fields != null && fields.contains(fieldName);
+    }
+
+    private static boolean isStaticInitialization(StackTraceElement[] stackTrace) {
+        for (StackTraceElement element : stackTrace) {
+            if (element.getMethodName().equals("<clinit>")) {
+                return true;
+            }
+        }
+        return false;
     }
 } 

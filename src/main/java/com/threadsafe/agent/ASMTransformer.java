@@ -6,8 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.File;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ASMTransformer {
+    private static final String OUTPUT_DIR = "out/transformed_classes";
+    private static final Logger logger = LogManager.getLogger(ASMTransformer.class);
+
     public byte[] transform(byte[] classfileBuffer) {
         try {
             System.out.println("Starting ASM transformation");
@@ -19,24 +25,49 @@ public class ASMTransformer {
             ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
             FieldAccessVisitor fv = new FieldAccessVisitor(cw);
             cr.accept(fv, ClassReader.EXPAND_FRAMES);
+            
+            byte[] transformedClass = cw.toByteArray();
+
+            // 添加保存class文件的功能
+            try {
+                String rootDir = new File(System.getProperty("user.dir")).getAbsolutePath();
+                String outputDir = new File(rootDir, OUTPUT_DIR).getAbsolutePath();
+                saveClassFile(outputDir, cr.getClassName(), transformedClass);
+            } catch (Exception e) {
+                logger.error("Failed to save class file: {}", e.getMessage());
+            }
+            // todo:
+
             System.out.println("ASM transformation completed");
-            return cw.toByteArray();
+            return transformedClass;
         } catch (Exception e) {
             e.printStackTrace();
             return classfileBuffer;
         }
     }
 
-    private void writeBytecodeToFile(byte[] bytecode, String filePath) {
+    private void saveClassFile(String baseDir, String className, byte[] classData) {
         try {
-            Files.createDirectories(Paths.get(filePath).getParent());
-            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                fos.write(bytecode);
+            File dir = new File(baseDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
             }
-            System.out.println("Bytecode written to: " + filePath);
+
+            String fileName = className + ".class";
+            File outputFile = new File(dir, fileName);
+
+            File parent = outputFile.getParentFile();
+            if (!parent.exists()) {
+                parent.mkdirs();
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                fos.write(classData);
+            }
+
+            System.out.println("Saved transformed class to: " + outputFile.getAbsolutePath());
         } catch (IOException e) {
-            System.err.println("Failed to write bytecode to file: " + filePath);
-            e.printStackTrace();
+            throw new RuntimeException("Error saving class file: " + e.getMessage(), e);
         }
     }
 } 

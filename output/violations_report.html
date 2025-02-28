@@ -1,0 +1,1554 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Thread Safety Violations Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .violation { 
+                border: 1px solid #ddd; 
+                margin: 10px 0; 
+                padding: 15px;
+                border-radius: 5px;
+            }
+            .thread-info {
+                margin: 10px 0;
+                padding: 10px;
+                background-color: #f5f5f5;
+                border-radius: 3px;
+            }
+            .stack-trace {
+                margin-left: 20px;
+                font-family: monospace;
+                display: none;  /* 默认隐藏 */
+            }
+            .variable {
+                font-weight: bold;
+                color: #d63031;
+            }
+            .thread-name {
+                color: #0984e3;
+                font-weight: bold;
+                cursor: pointer;  /* 添加手型光标 */
+                user-select: none;  /* 防止文字被选中 */
+            }
+            .thread-name:before {
+                content: "▶";  /* 添加折叠指示箭头 */
+                margin-right: 5px;
+                display: inline-block;
+                transition: transform 0.2s;
+            }
+            .thread-name.expanded:before {
+                transform: rotate(90deg);  /* 展开时旋转箭头 */
+            }
+            .location {
+                color: #00b894;
+            }
+            h1 { color: #2d3436; }
+            .summary {
+                margin: 20px 0;
+                padding: 10px;
+                background-color: #dfe6e9;
+                border-radius: 5px;
+            }
+            .excluded-section {
+                margin: 20px 0;
+                padding: 15px;
+                background-color: #81ecec;
+                border-radius: 5px;
+            }
+            .excluded-title {
+                color: #00b894;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .excluded-item {
+                margin: 5px 0;
+                padding: 5px;
+                background-color: #fff;
+                border-radius: 3px;
+            }
+            .ignored-section {
+                margin: 10px 0;  /* 减小边距使其看起来像子区域 */
+                padding: 15px;
+                background-color: #74b9ff;
+                border-radius: 5px;
+            }
+            .ignored-title {
+                color: #0984e3;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .ignored-item {
+                margin: 5px 0;
+                padding: 5px;
+                background-color: #fff;
+                border-radius: 3px;
+            }
+        </style>
+        <script>
+            function toggleStack(element) {
+                const stackTrace = element.nextElementSibling;
+                const isExpanded = element.classList.toggle('expanded');
+                stackTrace.style.display = isExpanded ? 'block' : 'none';
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Thread Safety Violations Report</h1>
+        
+        <div class="excluded-section">
+            <h3>Items Excluded by @RsmThreadSafe</h3>
+            
+            <div class="excluded-title">Excluded Classes:</div>
+    
+            <div class="excluded-item">com/citics/eqd/dao/LoadDataDAO</div>
+        
+            <div class="excluded-item">com/citics/eqd/rsm/service/dataservice/EqdSecuBalLoadService</div>
+        
+            <div class="excluded-item">com/citics/eqd/rsm/model/ContractHedgeRouteRule</div>
+        
+            <div class="excluded-item">com/citics/eqd/rsm/service/strategy/updater/model/ResponseUpdateRule</div>
+        
+            <div class="excluded-item">com/citics/eqd/statemachine/fluent/cola/impl/TransitionImpl</div>
+        
+            <div class="excluded-title">Excluded Methods:</div>
+    
+            <div class="excluded-item">com/citics/eqd/init/warmup/AeronWarmUpService.sendOrderResponse</div>
+        
+            <div class="excluded-item">com/citics/eqd/init/warmup/AeronWarmUpService.sendDealFill</div>
+        
+            <div class="excluded-item">com/citics/eqd/init/warmup/AeronWarmUpService.sendCancelResponse</div>
+        
+            <div class="excluded-item">com/citics/eqd/init/warmup/AeronWarmUpService.sendCancelFill</div>
+        
+            <div class="excluded-title">Excluded Fields:</div>
+    
+            <div class="excluded-item">com/citics/eqd/rsm/data/DataModelStore.stateMachine</div>
+        
+            <div class="excluded-item">com/citics/eqd/rsm/data/DataModelStore.contractHedgeRouteRuleMap</div>
+        
+            <div class="excluded-item">com/citics/eqd/rsm/data/DataModelStore.responseUpdateRuleMap</div>
+        
+            <div class="excluded-item">com/citics/eqd/rsm/handler/AbstractOrderHandler.checkRuleBeanList</div>
+        
+            <div class="excluded-item">com/citics/eqd/rsm/handler/AbstractOrderHandler.dmaCheckRuleBeanList</div>
+        
+            <div class="excluded-item">com/citics/eqd/rsm/handler/AbstractCancelHandler.checkRuleBeanList</div>
+        
+        </div>
+        
+        <div class="ignored-section">
+            <h3>Items Excluded by @IgnoreStaticInit</h3>
+            <div class="ignored-title">Fields ignoring static initialization writes:</div>
+    
+            <div class="ignored-item">com/citics/eqd/common/core/Global.warmup</div>
+        
+        </div>
+        
+        <div class="summary">
+            <h3>Violations Summary</h3>
+            <p>Total violations found: 14</p>
+        </div>
+    
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/common/core/Global.currentPosition</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 38)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.Global.&lt;clinit&gt;(Global.java:line 17)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 30)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/common/spring/SpringContext.context</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.common.spring.SpringContext.getBean(SpringContext.java:line 30)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 67)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.common.spring.SpringContext.setApplicationContext(SpringContext.java:line 18)</div>
+            
+                    <div class="location">at org.springframework.context.support.ApplicationContextAwareProcessor.invokeAwareInterfaces(ApplicationContextAwareProcessor.java:line 123)</div>
+            
+                    <div class="location">at org.springframework.context.support.ApplicationContextAwareProcessor.postProcessBeforeInitialization(ApplicationContextAwareProcessor.java:line 100)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:line 415)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:line 1786)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 594)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:line 399)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:line 399)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 207)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:line 453)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 527)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 207)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:line 453)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 527)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 207)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:line 453)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 527)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:line 399)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:line 897)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:line 879)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:line 551)</div>
+            
+                    <div class="location">at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:line 143)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 758)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 750)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:line 405)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.run(SpringApplication.java:line 315)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 41)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/common/core/Global.saveToDb</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.Global.canUpdate(Global.java:line 101)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.TX.beginReal(TX.java:line 56)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 135)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.Global.&lt;clinit&gt;(Global.java:line 63)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 30)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/rsm/service/admin/SystemParamsAdminService.seqIdHasSetFlag</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.SystemParamsAdminService.postHandle(SystemParamsAdminService.java:line 93)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.SystemParamsAdminService.postHandle(SystemParamsAdminService.java:line 24)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 138)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.SystemParamsAdminService.&lt;clinit&gt;(SystemParamsAdminService.java:line 45)</div>
+            
+                    <div class="location">at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:line 204)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:line 87)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:line 1310)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:line 1213)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 556)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:line 897)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:line 879)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:line 551)</div>
+            
+                    <div class="location">at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:line 143)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 758)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 750)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:line 405)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.run(SpringApplication.java:line 315)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 41)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/rsm/service/admin/MonitorResultAdminService.localMonitorResultMap</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle(MonitorTriggerAdminService.java:line 57)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle(MonitorTriggerAdminService.java:line 20)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 138)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorResultAdminService.&lt;clinit&gt;(MonitorResultAdminService.java:line 32)</div>
+            
+                    <div class="location">at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:line 204)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:line 87)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:line 1310)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:line 1213)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 556)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1307)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:line 897)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:line 879)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:line 551)</div>
+            
+                    <div class="location">at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:line 143)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 758)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 750)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:line 405)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.run(SpringApplication.java:line 315)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 41)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/common/core/Global.hedge</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.Global.canSend(Global.java:line 89)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.AeronSenderMaster.sendCommandToArchive(AeronSenderMaster.java:line 277)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.FragmentService.compressAndFragmentSend(FragmentService.java:line 79)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.sendData(AbstractAdminService.java:line 118)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.sendRequestWithoutReturn(AbstractAdminService.java:line 57)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle(MonitorTriggerAdminService.java:line 58)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle(MonitorTriggerAdminService.java:line 20)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 138)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.Global.&lt;clinit&gt;(Global.java:line 64)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 30)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/common/core/Global.ARCHIVE_SAVED_SENT_POSITION</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.Global.canSend(Global.java:line 89)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.AeronSenderMaster.sendCommandToArchive(AeronSenderMaster.java:line 277)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.FragmentService.compressAndFragmentSend(FragmentService.java:line 79)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.sendData(AbstractAdminService.java:line 118)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.sendRequestWithoutReturn(AbstractAdminService.java:line 57)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle(MonitorTriggerAdminService.java:line 58)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle(MonitorTriggerAdminService.java:line 20)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 138)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 103)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 52)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:line 172)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:line 165)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:line 139)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 404)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 361)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.start(AbstractApplicationContext.java:line 1365)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 42)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/common/core/Global.alreadySentPosition</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.AeronSenderMaster.sendPositionCommandToArchive(AeronSenderMaster.java:line 383)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.AeronSenderMaster.sendCommandToArchive(AeronSenderMaster.java:line 304)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.FragmentService.compressAndFragmentSend(FragmentService.java:line 79)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.sendData(AbstractAdminService.java:line 118)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.sendRequestWithoutReturn(AbstractAdminService.java:line 57)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle(MonitorTriggerAdminService.java:line 58)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.MonitorTriggerAdminService.postHandle(MonitorTriggerAdminService.java:line 20)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 138)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.Global.&lt;clinit&gt;(Global.java:line 28)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 30)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/init/SystemInit.DATA_LOAD_COUNT_DOWN_LATCH</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.dataservice.FinishLoadService.handleList(FinishLoadService.java:line 43)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.dataservice.AbstractDataLoadService.handleData(AbstractDataLoadService.java:line 81)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 62)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.&lt;clinit&gt;(SystemInit.java:line 57)</div>
+            
+                    <div class="location">at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:line 204)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:line 87)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:line 1310)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:line 1213)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 556)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:line 897)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:line 879)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:line 551)</div>
+            
+                    <div class="location">at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:line 143)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 758)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 750)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:line 405)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.run(SpringApplication.java:line 315)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 41)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/common/core/Global.warmup</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.Global.canUpdate(Global.java:line 101)</div>
+            
+                    <div class="location">at com.citics.eqd.common.core.TX.beginReal(TX.java:line 56)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 135)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 144)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 52)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:line 172)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:line 165)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:line 139)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 404)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 361)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.start(AbstractApplicationContext.java:line 1365)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 42)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/init/SystemInit.WARM_UP_PREPARE_COUNT_DOWN_LATCH</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.WarmUpPrepareAdminService.postHandle(WarmUpPrepareAdminService.java:line 92)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.WarmUpPrepareAdminService.postHandle(WarmUpPrepareAdminService.java:line 26)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 138)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 146)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 52)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:line 172)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:line 165)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:line 139)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 404)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 361)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.start(AbstractApplicationContext.java:line 1365)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 42)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/disruptor/DisruptorContext.instance</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.disruptor.DisruptorContext.getInstance(DisruptorContext.java:line 30)</div>
+            
+                    <div class="location">at com.citics.eqd.disruptor.ProducerContext.&lt;clinit&gt;(ProducerContext.java:line 7)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.core.TradeHandlerImpl.parseAndHandle(TradeHandlerImpl.java:line 191)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 52)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.disruptor.DisruptorContext.&lt;clinit&gt;(DisruptorContext.java:line 26)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.startDisruptor(SystemInit.java:line 194)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.startDisruptorAndIpcServer(SystemInit.java:line 170)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 110)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 52)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:line 172)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:line 165)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:line 139)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 404)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 361)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.start(AbstractApplicationContext.java:line 1365)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 42)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/statemachine/fluent/cola/impl/Debugger.isDebugOn</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.statemachine.fluent.cola.impl.Debugger.debug(Debugger.java:line 14)</div>
+            
+                    <div class="location">at com.citics.eqd.statemachine.fluent.cola.impl.TransitionImpl.transit(TransitionImpl.java:line 90)</div>
+            
+                    <div class="location">at com.citics.eqd.statemachine.fluent.cola.impl.StateMachineImpl.fireEvent(StateMachineImpl.java:line 59)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.handler.OrderResponseHandler.handle(OrderResponseHandler.java:line 63)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.mq.service.OrderResponseService.execute(OrderResponseService.java:line 23)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.mq.service.OrderResponseService.execute(OrderResponseService.java:line 13)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.core.TradeHandlerImpl.parseAndHandle(TradeHandlerImpl.java:line 199)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 52)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.statemachine.fluent.cola.impl.Debugger.&lt;clinit&gt;(Debugger.java:line 11)</div>
+            
+                    <div class="location">at com.citics.eqd.statemachine.fluent.cola.impl.StateImpl.addTransition(StateImpl.java:line 32)</div>
+            
+                    <div class="location">at com.citics.eqd.statemachine.fluent.cola.builder.TransitionBuilderImpl.on(TransitionBuilderImpl.java:line 50)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.dataservice.EqdStateMachineLoadService.handleList(EqdStateMachineLoadService.java:line 91)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.dataservice.EqdStateMachineLoadService.loadDataFromFile(EqdStateMachineLoadService.java:line 68)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:line 157)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:line 415)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:line 1786)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 594)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:line 276)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.addCandidateEntry(DefaultListableBeanFactory.java:line 1525)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:line 1489)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveMultipleBeans(DefaultListableBeanFactory.java:line 1378)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:line 1265)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:line 1227)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 521)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 207)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:line 453)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:line 527)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:line 497)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:line 130)</div>
+            
+                    <div class="location">at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:line 318)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:line 1420)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:line 593)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:line 516)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:line 234)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:line 322)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:line 202)</div>
+            
+                    <div class="location">at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:line 897)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:line 879)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:line 551)</div>
+            
+                    <div class="location">at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:line 143)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 758)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:line 750)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:line 405)</div>
+            
+                    <div class="location">at org.springframework.boot.SpringApplication.run(SpringApplication.java:line 315)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 41)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+        <div class="violation">
+            <div class="variable">Variable: static.com/citics/eqd/init/SystemInit.WARM_UP_CLEAR_COUNT_DOWN_LATCH</div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">RSM Thread: CONTRACT_WORKER</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 106)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.WarmUpClearAdminService.postHandle(WarmUpClearAdminService.java:line 125)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.service.admin.WarmUpClearAdminService.postHandle(WarmUpClearAdminService.java:line 27)</div>
+            
+                    <div class="location">at com.citics.eqd.rsm.AbstractAdminService.handleData(AbstractAdminService.java:line 138)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.DispatchService.dispatch(DispatchService.java:line 68)</div>
+            
+                    <div class="location">at com.citics.eqd.mq.aeron.CoreWorker.onFragment(CoreWorker.java:line 52)</div>
+            
+                    <div class="location">at io.aeron.FragmentAssembler.onFragment(FragmentAssembler.java:line 120)</div>
+            
+                    <div class="location">at io.aeron.logbuffer.TermReader.read(TermReader.java:line 76)</div>
+            
+                    <div class="location">at io.aeron.Image.poll(Image.java:line 308)</div>
+            
+                    <div class="location">at io.aeron.Subscription.poll(Subscription.java:line 195)</div>
+            
+                </div>
+            </div>
+            
+            <div class="thread-info">
+                <div class="thread-name" onclick="toggleStack(this)">Non-RSM Thread: main</div>
+                <div class="stack-trace">
+        
+                    <div class="location">at com.threadsafe.agent.AccessMonitor.checkAccess(AccessMonitor.java:line 116)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 152)</div>
+            
+                    <div class="location">at com.citics.eqd.init.SystemInit.onApplicationEvent(SystemInit.java:line 52)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:line 172)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:line 165)</div>
+            
+                    <div class="location">at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:line 139)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 404)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:line 361)</div>
+            
+                    <div class="location">at org.springframework.context.support.AbstractApplicationContext.start(AbstractApplicationContext.java:line 1365)</div>
+            
+                    <div class="location">at com.citics.EqdTradeApplication.main(EqdTradeApplication.java:line 42)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.MainMethodRunner.run(MainMethodRunner.java:line 49)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 107)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.Launcher.launch(Launcher.java:line 58)</div>
+            
+                    <div class="location">at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:line 88)</div>
+            
+                </div>
+            </div>
+        </div>
+        
+    </body>
+    </html>
+    
